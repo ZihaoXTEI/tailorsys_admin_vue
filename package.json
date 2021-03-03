@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.4.5",
+    "qs": "^6.9.6",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0"
   },
@@ -18,6 +19,11 @@
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-plugin-component": "^1.1.1",
+    "css-loader": "^5.1.0",
+    "less": "^4.1.1",
+    "less-loader": "^7.3.0",
+    "style-loader": "^2.0.0",
+    "stylus-loader": "^5.0.0",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-template-compiler": "^2.6.11"
   }
