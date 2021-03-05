@@ -57,9 +57,9 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           {
-            min: 6,
+            min: 8,
             max: 18,
-            message: '长度在 6 到 16 个字符',
+            message: '长度在 8 到 16 个字符',
             trigger: 'blur',
           },
         ],
