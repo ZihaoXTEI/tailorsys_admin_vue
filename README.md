@@ -1,4 +1,4 @@
-# tailorsys_vue
+# tailorsys_admin_vue
 
 ## Project setup
 ```
