@@ -1,5 +1,24 @@
 <template>
+
   <div>
+    <el-card class="box-card">
+      <el-row :gutter="20">
+        <el-col :span="20">
+          <el-input
+            placeholder="请输入订单号"
+            v-model="queryInfo.orderid"
+            clearable
+            @clear="getList()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="getList()"
+            ></el-button>
+          </el-input>
+        </el-col>
+      </el-row>
+    </el-card>
     <el-card
       class="box-card"
       shadow="hover"
@@ -113,6 +132,10 @@ export default {
       username: '',
       datetime: '',
 
+      queryInfo:{
+        orderid:''
+      },
+
       // 处理时间函数
       pickerOptions: {
         disabledDate: time => {
@@ -148,7 +171,7 @@ export default {
 
     //获取订单流程信息
     getList() {
-      getOrderProcessList().then(response => {
+      getOrderProcessList(this.queryInfo).then(response => {
         this.orders = response.data
         //转换时间显示格式
         changeTimeFormat(

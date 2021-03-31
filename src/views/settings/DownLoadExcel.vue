@@ -101,6 +101,21 @@
       </div>
 
       <el-divider content-position="left">其他数据</el-divider>
+
+      <div
+        class="div-box"
+        style="background-color: #E6A23C;box-shadow: 5px 5px 10px #FFA000;"
+      >
+        <div class="div-font">
+          服装类型数据
+        </div>
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          >下载</el-button
+        >
+      </div>
     </el-card>
   </div>
 </template>
@@ -141,12 +156,14 @@ export default {
     },
 
     orderProcessInfo() {
-      downloadOrderProcessInfo().then(res => {
-        let blob = new Blob([res], { type: 'application/xlsx' })
-        this.downloadFile('订单流程信息', blob)
-      }).catch((err)=>{
+      downloadOrderProcessInfo()
+        .then(res => {
+          let blob = new Blob([res], { type: 'application/xlsx' })
+          this.downloadFile('订单流程信息', blob)
+        })
+        .catch(err => {
           console.log(err)
-      })
+        })
     },
 
     fabricStockInfo() {

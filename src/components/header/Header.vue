@@ -4,7 +4,7 @@
       <img src="@/assets/trademark.png" />
       <el-badge value="v1.0.0" type="primary">
         <div style="width:200px;">
-        <span>制衣店管理系统 </span>
+          <span>制衣店管理系统 </span>
         </div>
       </el-badge>
     </div>
@@ -145,9 +145,19 @@ export default {
           this.logout()
           break
         case '3':
+          this.goAboutPage()
           break
         default:
           break
+      }
+    },
+
+    goAboutPage() {
+      var routerList = []
+      routerList.push('关于')
+      window.sessionStorage.setItem('routerName', routerList)
+      if (this.$route.path !== '/about') {
+        this.$router.push({ path: '/about' })
       }
     },
 

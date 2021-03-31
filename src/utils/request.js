@@ -28,17 +28,18 @@ service.interceptors.response.use(
         NProgress.done()
         const res = response.data
 
-        if(response.data.type == 'application/vnd.ms-excel'){
+        if (response.data.type == 'application/vnd.ms-excel') {
             return response.data
         }
 
         if (res.status === 210) {
             return response.data
         } else if (res.status === 400) {
-            Message({
+            this.$notify.error({
+                title: '错误',
                 message: res.message,
-                type: 'error',
-            })
+                duration: 0
+            });
 
             return Promise.reject(response.data)
         } else if (res.status === 200) {
@@ -52,12 +53,13 @@ service.interceptors.response.use(
         }
 
     }, error => {
-        console.log('ERROR:' + error)
-        Message({
+        NProgress.done()
+        console.log(error)
+        this.$notify.error({
+            title: '错误',
             message: '登录超时，请联系系统管理员',
-            type: 'error',
-            duration: 5 * 1000
-        })
+            duration: 0
+        });
         return Promise.reject(error)
     }
 )

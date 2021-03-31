@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 const Login = () => import('../views/Login.vue')
 const Home = () => import('../views/layout/Home.vue')
 const Welcome = () => import('../views/Welcome.vue')
-const Ordercalendar = () => import('../views/plan/Ordercalendar.vue')
+const OrderCalendar = () => import('../views/plan/OrderCalendar.vue')
 const OrderCard = () => import('../views/plan/OrderCard.vue')
 const FabricType = () => import('../views/data/FabricType.vue')
 const ClothType = () => import('../views/data/ClothType.vue')
@@ -21,6 +21,7 @@ const InventoryStatistics = () => import('../views/statistics/InventoryStatistic
 const OrderStatistics = () => import('../views/statistics/OrderStatistics.vue')
 const Users = () => import('../views/settings/Users.vue')
 const DownLoadExcel = () => import('../views/settings/DownLoadExcel.vue')
+const About = () => import('../views/About.vue')
 /**const Users = () => import('../views/settings/Users.vue')
 const FabricInbound = () => import('../views/stock/FabricInbound.vue')
 const FabricStock = () => import('../views/stock/FabricStock.vue')
@@ -44,7 +45,7 @@ const routes = [
     component: Home,
     redirect: '/welcome',
     children: [{ path: '/welcome', meta: { title: '欢迎' }, component: Welcome },
-    { path: '/ordercalendar', meta: { title: '事务月历' }, component: Ordercalendar },
+    { path: '/ordercalendar', meta: { title: '事务月历' }, component: OrderCalendar },
     { path: '/ordercard', meta: { title: '订单流程' }, component: OrderCard },
     { path: '/fabrictype', meta: { title: '布料类型信息' }, component: FabricType },
     { path: '/clothtype', meta: { title: '服装类型信息' }, component: ClothType },
@@ -60,7 +61,8 @@ const routes = [
     { path: '/inventorystatistics', meta: { title: '库存统计' }, component: InventoryStatistics },
     { path: '/orderstatistics', meta: { title: '订单统计' }, component: OrderStatistics },
     { path: '/users', meta: { title: '用户管理' }, component: Users },
-    { path: '/downloadexcel', meta: { title: '数据下载' }, component: DownLoadExcel }
+    { path: '/downloadexcel', meta: { title: '数据下载' }, component: DownLoadExcel },
+    { path: '/about', meta: { title: '关于' }, component: About },
       /**{ path: '/users', meta: { title: '用户管理' }, component: Users },
       { path: '/fabricinbound', meta: { title: '布料入库' }, component: FabricInbound },
       { path: '/fabricstock', meta: { title: '布料库存' }, component: FabricStock },

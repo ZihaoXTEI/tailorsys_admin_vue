@@ -2,20 +2,71 @@
   <div>
     <el-calendar>
       <!--<template slot="dateCell" slot-scope="{ date, data }">-->
-      <template v-slot:dateCell="{ date, data }">
-        <div class="calendar-day">
-          <p style="margin-block-start: 0em;margin-block-end:0em">
+      <template #dateCell="{ data }">
+        <div class="calendar-day" :class="data.isSelected ? 'is-selected' : ''">
+          <div
+            style="margin-block-start: 0em;margin-block-end:0em"
+            @click="addEventM(data.day)"
+          >
             {{
               data.day
                 .split('-')
                 .slice(1)
                 .join('-')
             }}
-          </p>
+          </div>
 
-          <span v-for="(item, index) in medata(data)" :key="index" style="display:block;">
-            {{ item.content }}<br>
-          </span>
+<!--           <template v-for="(item, index) in orderListFilter(data)">
+            <div class="div-order" :key="index + 'o'">{{ item.orderName }}</div>
+          </template> -->
+          <template v-for="(item, index) in orderListFilter(data)">
+            <el-popover
+              ref="popover"
+              placement="right"
+              :title="item.orderName"
+              :width="250"
+              trigger="hover"
+              :content="'订单编号：' + item.orderId"
+              :key="index + 'o'"
+            >
+              <template #reference>
+                <div class="div-order">{{ item.orderName }}</div>
+              </template>
+            </el-popover>
+          </template>
+
+          <!--           <span
+            v-for="(item, index) in dataFilter(data)"
+            :key="index"
+            style="display:block;"
+          >
+            {{ item.content }}<br />
+          </span> -->
+
+          <template v-for="(item, index) in eventListFilter(data)">
+            <!--             <el-tooltip
+              :content="item.content"
+              placement="bottom"
+              effect="light"
+              :key="index"
+            >
+              <div class="isSelected">{{ item.content }}</div>
+            </el-tooltip> -->
+
+            <el-popconfirm
+              confirmButtonText="好的"
+              cancelButtonText="不用了"
+              icon="el-icon-info"
+              iconColor="red"
+              title="确定删除该事件吗？"
+              @confirm="deleteEventM(item.id)"
+              :key="index + 'e'"
+            >
+              <template #reference>
+                <div class="div-event">{{ item.content }}</div>
+              </template>
+            </el-popconfirm>
+          </template>
         </div>
       </template>
     </el-calendar>
@@ -23,76 +74,182 @@
 </template>
 
 <script>
+import {
+  getEventList,
+  addEvent,
+  updateEvent,
+  deleteEvent,
+  getOrderList
+} from '@/api/plan'
+import { changeDateFormat } from '@/utils/moment'
 export default {
   data() {
     return {
       value: new Date(),
+
+      counts: 0,
+      time: '',
+
+      eventForm: {
+        id: null,
+        date: '',
+        content: ''
+      },
+
+      eventList: [],
+      orderList: [],
+
       schedule: [
         { date: '2021-03-20', content: '陈小姐订单' },
         { date: '2021-03-20', content: '李先生订单' },
+        { date: '2021-03-20', content: '李先生订单' },
+        { date: '2021-03-20', content: '李先生订单' },
         { date: '2021-03-25', content: '进货' }
-      ],
-      resDate: [{ date: '2021-03-12', content: '上课' }]
+      ]
     }
   },
 
-  methods: {
-    /* 
-
-    async getTimeConfig() {
-      // 根据日期分类
-      this.groupedItems = _(this.resDate)
-        .groupBy(item => item.date)
-        .map((items, day) => {
-          return {
-            day: day,
-            likes: items
-          }
-        })
-        .reverse() // 为了反转数组排序
-        .value()
-    } */
-  },
-
   computed: {
-    medata() {
+    orderListFilter() {
       return data => {
-        return this.schedule.filter(ele => {
-          //let time = this.$moment(Number(ele.start_time * 1000)).format('YYYY-MM-DD')   // 将时间戳转格式
-          //console.log(ele)
-          //return this.$moment(Number(ele.date)).isSame(data.day)
-          //console.log(data.day)
-          if (ele.date === data.day) {
-            return ele.date
+        return this.orderList.filter(item => {
+          if (item.deadline === data.day) {
+            console.log(item.deadline)
+            return item.deadline
           }
         })
       }
+    },
+
+    eventListFilter() {
+      return data => {
+        return this.eventList.filter(item => {
+          //let time = this.$moment(Number(ele.start_time * 1000)).format('YYYY-MM-DD')   // 将时间戳转格式
+          //console.log(ele)
+          //return this.$moment(Number(ele.date)).isSame(data.day)
+          /*           if(this.time === data.day){
+            this.counts ++
+            console.log(this.counts)
+          }else{
+            this.counts = 0
+            this.time = data.day
+            console.log(this.counts)
+          } */
+          if (item.date === data.day) {
+            return item.date
+          }
+        })
+      }
+    }
+  },
+
+  created() {
+    this.getList()
+  },
+
+  methods: {
+    getList() {
+      getEventList().then(res => {
+        this.eventList = res.data
+        changeDateFormat(this.eventList, 'date')
+        console.log(this.eventList)
+      })
+
+      getOrderList().then(res => {
+        this.orderList = res.data
+        changeDateFormat(this.orderList, 'deadline')
+        console.log(this.orderList)
+      })
+    },
+
+    addEventM(day) {
+      this.eventForm.date = day
+
+      this.$prompt('请输入事件', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+
+        inputErrorMessage: '输入的字数过多，请少于8个字符'
+      })
+        .then(({ value }) => {
+          this.eventForm.content = value
+          addEvent(this.eventForm).then(res => {
+            this.getList()
+          })
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+    },
+
+    deleteEventM(id) {
+      console.log(id)
+      deleteEvent(id)
+        .then(res => {
+          this.getList()
+        })
+        .catch(err => {})
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
-.is-selected {
-  color: #1989fa;
-}
-
-/*.el-calendar-table .el-calendar-day {
-    box-sizing: border-box;
-    padding: 8px;
-    height: 100%;
-}
-*/
-
-</style>
-
 <style>
-
-
 .calendar-day {
   text-align: center;
-  font-size: 14px;
-/*   padding-top: 2px;
+  line-height: 16px;
+  font-size: 12px;
+
+  /*   padding-top: 2px;
   border-top: 0px; */
+}
+
+.el-calendar-table .el-calendar-day {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 150px;
+}
+
+.el-calendar-table .el-calendar-click {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 8px;
+  height: 100px;
+}
+.el-calendar-table thead th {
+  padding: 6px 0;
+  color: #606266;
+  font-weight: normal;
+  text-align: center;
+}
+
+.is-selected {
+  color: #1989fa;
+  font-size: 10px;
+}
+
+.div-order {
+  box-sizing: border-box;
+  border-radius: 8px;
+  border-style: 4px solid;
+  margin-bottom: 2px;
+  padding: auto;
+  background-color: blanchedalmond;
+}
+
+.div-event {
+  box-sizing: border-box;
+  border-radius: 8px;
+  border-style: 4px solid;
+  margin-bottom: 2px;
+  padding: auto;
+  background-color: rgb(159, 221, 240);
 }
 </style>
