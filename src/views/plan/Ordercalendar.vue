@@ -97,15 +97,7 @@ export default {
       },
 
       eventList: [],
-      orderList: [],
-
-      schedule: [
-        { date: '2021-03-20', content: '陈小姐订单' },
-        { date: '2021-03-20', content: '李先生订单' },
-        { date: '2021-03-20', content: '李先生订单' },
-        { date: '2021-03-20', content: '李先生订单' },
-        { date: '2021-03-25', content: '进货' }
-      ]
+      orderList: []
     }
   },
 
@@ -168,8 +160,8 @@ export default {
       this.$prompt('请输入事件', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-
-        inputErrorMessage: '输入的字数过多，请少于8个字符'
+        inputPattern:/^.{2,8}$/,
+        inputErrorMessage: '输入字符限制在2-9个'
       })
         .then(({ value }) => {
           this.eventForm.content = value

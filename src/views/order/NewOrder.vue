@@ -13,7 +13,7 @@
 
       <!-- Steps步骤条组件 -->
       <el-steps :active="+activeIndex" align-center>
-        <el-step title="选顾客信息" icon="el-icon-edit"></el-step>
+        <el-step title="选择顾客信息" icon="el-icon-edit"></el-step>
         <el-step title="填写量体数据" icon="el-icon-scissors"></el-step>
         <el-step title="选择布料数据" icon="el-icon-receiving"></el-step>
         <el-step title="填写订单内容" icon="el-icon-finished"></el-step>
@@ -27,7 +27,7 @@
         :before-leave="beforeTabLeave"
         @tab-click="tabClicked"
       >
-        <el-tab-pane label="填写顾客信息" name="0">
+        <el-tab-pane label="选择顾客信息" name="0">
           <el-form
             :model="newOrderForm"
             :rules="newOrderFormRules"
@@ -45,6 +45,19 @@
                 >
                 </el-option>
               </el-select>
+
+              <el-tooltip
+                class="item"
+                effect="light"
+                content="新增顾客"
+                placement="bottom"
+              >
+                <el-button
+                  icon="el-icon-plus"
+                  style="margin-left:25px"
+                  @click="showAddCustomerDialog(true, '添加顾客信息')"
+                ></el-button>
+              </el-tooltip>
             </el-form-item>
 
             <el-form-item label="选择订做服装类型" prop="clothtypeId">
@@ -322,6 +335,13 @@
         <el-button type="primary" @click="newAnthrData">确 定</el-button>
       </span>
     </el-dialog>
+
+    <CustomerDialog
+      :title="customerDialogTitle"
+      :id="customerDialogId"
+      :visible.sync="customerDialogVisible"
+      @confirm="getSelectCustomer"
+    ></CustomerDialog>
   </div>
 </template>
 
@@ -342,16 +362,22 @@ import {
 import { anthropometryEntity } from '@/data/anthropometrydata'
 import { fabricNoEnough } from '@/utils/transfor'
 import { isRepeat } from '@/utils/check'
+import CustomerDialog from '@/components/dialog/CustomerDialog.vue'
 
 export default {
   inject: ['reload'],
   name: 'NewOrder',
+  components: { CustomerDialog },
   data() {
     return {
       activeIndex: '0',
 
       anthrDataStatus: false,
       fabricDataStatus: false,
+
+      customerDialogTitle: '',
+      customerDialogId: 0,
+      customerDialogVisible: false,
 
       newOrderForm: {
         customerId: null,
@@ -506,6 +532,12 @@ export default {
       })
     },
 
+    showAddCustomerDialog(isVisible, title, id = 0) {
+      this.customerDialogTitle = title
+      this.customerDialogId = id
+      this.customerDialogVisible = isVisible
+    },
+
     // 获取服装类型选择器数据
     getSelectClothType() {
       getClothTypeSelect().then(res => {
@@ -579,7 +611,7 @@ export default {
       )
         .then(res => {
           this.anthrIdSelect = true
-          
+
           this.anthropometryForm = anthropometryEntity
           this.anthropometryForm.anthrId = res.data
           this.anthropometryForm.customerId = this.newOrderForm.customerId

@@ -35,11 +35,12 @@ service.interceptors.response.use(
         if (res.status === 210) {
             return response.data
         } else if (res.status === 400) {
-            this.$notify.error({
+/*             this.$notify.error({
                 title: '错误',
                 message: res.message,
                 duration: 0
-            });
+            }); */
+            console.log('ERROR:400')
 
             return Promise.reject(response.data)
         } else if (res.status === 200) {
@@ -55,11 +56,11 @@ service.interceptors.response.use(
     }, error => {
         NProgress.done()
         console.log(error)
-        this.$notify.error({
+/*         this.$notify.error({
             title: '错误',
             message: '登录超时，请联系系统管理员',
             duration: 0
-        });
+        }); */
         return Promise.reject(error)
     }
 )

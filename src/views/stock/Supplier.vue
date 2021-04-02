@@ -19,7 +19,7 @@
         </el-col>
 
         <el-col :span="4">
-          <el-button type="primary" @click="addSupplierDialogVisible = true"
+          <el-button type="primary" @click="showDialog(true, '添加供应商信息')"
             >添加供应商信息</el-button
           >
         </el-col>
@@ -54,7 +54,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 circle
-                @click="showEditSupplierDialog(scope.row.supId)"
+                @click="showDialog(true, '修改供应商信息', scope.row.supId)"
               ></el-button>
             </el-tooltip>
             <el-tooltip
@@ -70,7 +70,7 @@
         </el-table-column>
       </el-table>
 
-      <!-- 分页模块 -->
+      <!-- 分页组件 -->
       <pagination
         v-show="total > 0"
         :total="total"
@@ -80,236 +80,74 @@
       />
     </el-card>
 
-    <!-- 添加供应商信息对话框 -->
-    <el-dialog
-      title="添加供应商信息"
-      :visible.sync="addSupplierDialogVisible"
-      width="50%"
-      @close="addSupplierDialogClosed"
-    >
-      <!-- 内容主体区 -->
-      <el-form
-        :model="addSupplierForm"
-        :rules="formRules"
-        ref="addSupplierFormRef"
-        label-width="100px"
-        status-icon
-      >
-        <el-form-item label="供应商名称" prop="supName">
-          <el-input v-model="addSupplierForm.supName"></el-input>
-        </el-form-item>
-        <el-form-item label="供应商地址" prop="supAddress">
-          <el-input v-model="addSupplierForm.supAddress"></el-input>
-        </el-form-item>
-        <el-form-item label="供应商电话1" prop="supPhone1">
-          <el-input v-model="addSupplierForm.supPhone1"></el-input>
-        </el-form-item>
-        <el-form-item label="供应商电话2" prop="supPhone2">
-          <el-input v-model="addSupplierForm.supPhone2"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="addSupplierDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addSupplier">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- 修改供应商信息对话框 -->
-    <el-dialog
-      title="修改供应商信息"
-      :visible.sync="editSupplierDialogVisible"
-      width="50%"
-      @close="editSupplierDialogClosed"
-    >
-      <!-- 内容主体区 -->
-      <el-form
-        :model="editSupplierForm"
-        :rules="formRules"
-        ref="editSupplierFormRef"
-        label-width="100px"
-        status-icon
-      >
-        <el-form-item label="供应商名称" prop="supName">
-          <el-input v-model="editSupplierForm.supName"></el-input>
-        </el-form-item>
-        <el-form-item label="供应商地址" prop="supAddress">
-          <el-input v-model="editSupplierForm.supAddress"></el-input>
-        </el-form-item>
-        <el-form-item label="供应商电话1" prop="supPhone1">
-          <el-input v-model="editSupplierForm.supPhone1"></el-input>
-        </el-form-item>
-        <el-form-item label="供应商电话2" prop="supPhone2">
-          <el-input v-model="editSupplierForm.supPhone2"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editSupplierDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editSupplier(editSupplierForm.supId)"
-          >确 定</el-button
-        >
-      </span>
-    </el-dialog>
+    <!-- 对话框组件 -->
+    <SupplierDialog
+      :title="title"
+      :id="id"
+      :visible.sync="dialogVisible"
+      @confirm="getList"
+    ></SupplierDialog>
   </div>
 </template>
 
 <script>
-import Pagination from "@/components/pagination/Pagination.vue";
-import {
-  getSupplierList,
-  updateSupplierStatus,
-  addSupplier,
-  getSupplier,
-  updateSupplier,
-} from "@/api/supplier";
+import Pagination from '@/components/pagination/Pagination.vue'
+import SupplierDialog from '@/components/dialog/SupplierDialog.vue'
+import { getSupplierList, updateSupplierStatus } from '@/api/supplier'
 export default {
-  name: "Supplier",
-  components: { Pagination },
+  name: 'Supplier',
+  components: { Pagination, SupplierDialog },
   data() {
-    // 验证输入的手机号码是否合法
-    var validatePhone = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入手机号"));
-      } else {
-        if (!/^1[3456789]\d{9}$/.test(value)) {
-          callback(new Error("请输入正确的手机号"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       //获取供应商信息列表
       queryInfo: {
-        query: "",
+        query: '',
         pagenum: 1,
-        pagesize: 10,
+        pagesize: 10
       },
 
       supplierList: [],
-      test:[],
-
+      test: [],
       total: 0,
 
-      /**
-       * 添加供应商信息对话框所用数据
-       */
-      // 控制新增供应商信息对话框的显示与隐藏
-      addSupplierDialogVisible: false,
-      // 添加供应商信息的表单数据
-      addSupplierForm: {
-        supId: null,
-        supName: "",
-        supAddress: "",
-        supPhone1: "",
-        supPhone2: "",
-      },
-
-      /**
-       * 修改供应商信息对话框所用数据
-       */
-      // 控制新增供应商信息对话框的显示与隐藏
-      editSupplierDialogVisible: false,
-      editSupplierForm: {},
-
-      // 表单的验证规则对象
-      formRules: {
-        supName: [
-          { required: true, message: "请输入供应商名称", trigger: "blur" },
-          {
-            min: 2,
-            max: 30,
-            message: "长度在 2 到 30 个字符",
-            trigger: "blur",
-          },
-        ],
-        supAddress: [
-          { min: 1, max: 6, message: "请输入合法信息", trigger: "blur" },
-        ],
-        supPhone1: [{ validator: validatePhone, trigger: "blur" }],
-        supPhone2: [{ validator: validatePhone, trigger: "blur" }],
-      },
-    };
+      title: '',
+      id: 0,
+      dialogVisible: false
+    }
   },
 
   created() {
-    this.getList();
+    this.getList()
   },
 
   methods: {
     // 获取供应商信息列表方法
     getList() {
-      getSupplierList(this.queryInfo).then((res) => {
-        this.supplierList = res.data.content;
-        this.total = res.data.totalSize;
-        
-        this.test[0] = 'XXX'
-        this.test[1]='sss'
-
-        console.log(this.test)
-      });
+      getSupplierList(this.queryInfo).then(res => {
+        this.supplierList = res.data.content
+        this.total = res.data.totalSize
+      })
     },
 
     handleFilter() {
-      this.queryInfo.pagenum = 1;
-      this.getList();
+      this.queryInfo.pagenum = 1
+      this.getList()
+    },
+
+    showDialog(isVisible, title, id = 0) {
+      this.title = title
+      this.id = id
+      this.dialogVisible = isVisible
     },
 
     // 监听 switch 开关的状态
     supplierStatusChanged(switchInfo) {
-      updateSupplierStatus(switchInfo.supId, switchInfo.supStatus).catch(()=>{
+      updateSupplierStatus(switchInfo.supId, switchInfo.supStatus).catch(() => {
         switchInfo.status = !switchInfo.status
       })
-    },
-
-    /**
-     * 添加供应商信息对话框的方法
-     */
-
-    // 监听添加供应商信息对话框的关闭事件
-    addSupplierDialogClosed() {
-      this.$refs.addSupplierFormRef.resetFields();
-    },
-
-    addSupplier() {
-      this.$refs.addSupplierFormRef.validate((valid) => {
-        if (!valid) return this.$message.error("添加供应商信息的数据无效");
-        // 发起网络请求
-        addSupplier(this.addSupplierForm).then((res) => {
-          // 隐藏添加供应商信息对话框
-          this.addSupplierDialogVisible = false;
-        });
-      });
-    },
-
-    /**
-     * 修改供应商信息对话框方法
-     */
-    showEditSupplierDialog(id) {
-      getSupplier(id).then((res) => {
-        this.editSupplierForm = res.data;
-        this.editSupplierDialogVisible = true;
-      });
-    },
-
-    // 监听修改供应商信息对话框的关闭事件
-    editSupplierDialogClosed() {
-      this.$refs.editSupplierFormRef.resetFields();
-    },
-
-    editSupplier(id) {
-      this.$refs.editSupplierFormRef.validate((valid) => {
-        if (!valid) return this.$message.error("修改供应商信息的数据无效");
-        // 发起修改供应商信息的网络请求
-        updateSupplier(id, this.editSupplierForm).then((res) => {
-          // 隐藏修改供应商信息信息对话框
-          this.editSupplierDialogVisible = false;
-        });
-        // 重新获取供应商信息列表的信息
-        this.getList();
-      });
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped></style>
