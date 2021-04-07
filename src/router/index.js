@@ -85,7 +85,24 @@ const router = new VueRouter({
   routes,
 })
 
+/**解决报错：NavigationDuplicated: Avoided redundant navigation to current location: "/XXX". */
+const originalReplace = VueRouter.prototype.replace
+VueRouter.prototype.replace = function replace(location) {
+  return originalReplace.call(this, location).catch(err => err)
+}
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 router.beforeEach((to, from, next) => {
+  console.log(from)
+
+  if (to.path !== '/' && to.path !== '/login' && window.sessionStorage.getItem('token') == null) {
+    router.replace('/login')
+    next()
+  }
+
   //设置页面标题
   window.document.title = to.meta.title + '-制衣店信息管理系统';
   next();

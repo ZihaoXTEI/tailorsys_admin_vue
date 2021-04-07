@@ -131,6 +131,8 @@ export default {
     //退出登录的方法
     logout() {
       // 清空 token
+      
+      window.sessionStorage.removeItem('token')
       window.sessionStorage.clear()
       this.$router.push('/login')
     },

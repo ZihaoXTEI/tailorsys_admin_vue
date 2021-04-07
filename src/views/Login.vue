@@ -1,5 +1,6 @@
 <template>
   <div class="loginPage_container">
+    <div class="loginPage_bigbox"></div>
     <div class="loginPage_box">
       <h3>制衣店信息管理系统</h3>
       <!-- 登录表单 -->
@@ -34,77 +35,82 @@
 </template>
 
 <script>
-import { login } from "@/api/login";
+import { login } from '@/api/login'
 
 export default {
   data() {
     return {
       // 登录表单的数据绑定对象
       loginData: {
-        username: "admin",
-        password: "12345678",
+        username: '',
+        password: ''
       },
 
       // 登录表单的验证规则
       loginRules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: '请输入用户名', trigger: 'blur' },
           {
             min: 5,
             max: 12,
-            message: "长度在 5 到 12 个字符",
-            trigger: "blur",
-          },
+            message: '长度在 5 到 12 个字符',
+            trigger: 'blur'
+          }
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
+          { required: true, message: '请输入密码', trigger: 'blur' },
           {
             min: 8,
             max: 18,
-            message: "长度在 8 到 16 个字符",
-            trigger: "blur",
-          },
-        ],
-      },
-    };
+            message: '长度在 8 到 16 个字符',
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
   },
   methods: {
     // 登录按钮的方法
     loginSys() {
-      console.log(this.loginData);
-      var _this = this;
-      //async实现异步
-      this.$refs.loginFormRef.validate((value) => {
-        if (!value) return;
+      console.log(this.loginData)
+      var _this = this
+      this.$refs.loginFormRef.validate(value => {
+        if (!value) return
         //alert("登录成功！");
-        login(_this.loginData)
-          .then((response) => {
-            console.log(response.data);
-            this.$message.success("登录成功");
-            //将后端返回的token，保持到客户端的sessionStorage中
-            window.sessionStorage.setItem("token", response.data.token);
-            //通过编程式导航跳转到后台主页，路由地址是/home
-            this.$router.push("/home");
-          })
-          .catch(() => {
-            this.$message.error("登录失败");
-          });
-      });
+        login(_this.loginData).then(response => {
+          console.log(response.data)
+          this.$message.success('登录成功')
+          //将后端返回的token，保持到客户端的sessionStorage中
+          window.sessionStorage.setItem('token', response.data.token)
+          //通过编程式导航跳转到后台主页，路由地址是/home
+          this.$router.push('/home')
+        })
+      })
     },
     // 清空按钮的方法
     resetLoginForm() {
-      this.$refs.loginFormRef.resetFields();
+      this.$refs.loginFormRef.resetFields()
       //this.$data.loginData.username='';
       //this.$data.loginData.password='';
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
 .loginPage_container {
   background-image: url(../assets/background.jpg);
   height: 100%;
+  width: 100%;
+}
+
+.loginPage_bigbox {
+  background-color: hsla(0, 0%, 100%, 0.5);
+  width: 380px;
+  left: 60%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
 }
 
 .loginPage_box {
@@ -112,10 +118,14 @@ export default {
   height: 300px;
   background-color: #fff;
   border-radius: 3px;
+  border: 10px solid hsla(0, 0%, 100%, 0.5);
+  background-color: white;
+  background-clip: padding-box;
   position: absolute;
-  left: 30%;
+  left: 70%;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1;
 
   /*background: linear-gradient(
         to left bottom,

@@ -30,3 +30,12 @@ export function updateClothConsumption(id,formData){
         data: formData
     })
 }
+
+//验证布料是否充足
+export function verifyFabricIsEnough(anthrid,clothtypeid,list){
+    console.log(list)
+    return request({
+        url:`data/clothconsumption/verif/${anthrid}/${clothtypeid}/${list}`,
+        method:'get'
+    })
+}

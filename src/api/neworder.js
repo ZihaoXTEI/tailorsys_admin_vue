@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function verifyFabricIsEnough(anthrid,clothtypeid,list){
     console.log(list)
     return request({
-        url:`neworder/verif/${anthrid}/${clothtypeid}/${list}`,
+        url:`data/clothconsumption/verif/${anthrid}/${clothtypeid}/${list}`,
         method:'get'
     })
 }

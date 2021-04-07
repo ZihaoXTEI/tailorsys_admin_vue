@@ -3,7 +3,7 @@ import request from '@/utils/request'
 //根据量体编号获取顾客的量体信息
 export function getAnthropometry(id) {
     return request({
-        url: `neworder/${id}`,
+        url: `anthr/${id}`,
         method: 'get',
     })
 }
@@ -11,7 +11,7 @@ export function getAnthropometry(id) {
 //新建顾客量体信息
 export function addAnthropometry(id,anthrnote) {
     return request({
-        url: `neworder/newanthr/${id}/${anthrnote}`,
+        url: `anthr/${id}/${anthrnote}`,
         method:'post'
     })
 }
@@ -19,7 +19,7 @@ export function addAnthropometry(id,anthrnote) {
 //更新（保存）顾客的量体信息
 export function updateAnthropometry(id,formData){
     return request({
-        url:`neworder/newanthr/${id}`,
+        url:`anthr/${id}`,
         method:'put',
         data:formData
     })

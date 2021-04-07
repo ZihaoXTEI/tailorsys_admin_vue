@@ -5,7 +5,7 @@
       <template #dateCell="{ data }">
         <div class="calendar-day" :class="data.isSelected ? 'is-selected' : ''">
           <div
-            style="margin-block-start: 0em;margin-block-end:0em"
+            style="margin-block-start: 0em;margin-block-end:0em; font-weight: bold"
             @click="addEventM(data.day)"
           >
             {{
@@ -16,7 +16,7 @@
             }}
           </div>
 
-<!--           <template v-for="(item, index) in orderListFilter(data)">
+          <!--           <template v-for="(item, index) in orderListFilter(data)">
             <div class="div-order" :key="index + 'o'">{{ item.orderName }}</div>
           </template> -->
           <template v-for="(item, index) in orderListFilter(data)">
@@ -160,7 +160,7 @@ export default {
       this.$prompt('请输入事件', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern:/^.{2,8}$/,
+        inputPattern: /^.{2,8}$/,
         inputErrorMessage: '输入字符限制在2-9个'
       })
         .then(({ value }) => {

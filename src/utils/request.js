@@ -1,5 +1,9 @@
 import axios from 'axios'
+import Vue from 'vue'
+import router from '../router'
 import { Message, MessageBox } from 'element-ui'
+import { Notification } from 'element-ui'
+
 
 // 导入 NProgress 包对应的JS和CSS
 import NProgress from 'nprogress'
@@ -15,6 +19,7 @@ const service = axios.create({
 
 service.interceptors.request.use(config => {
     NProgress.start()
+
     config.headers.Authorization = window.sessionStorage.getItem('token')
     return config
 }, error => {
@@ -32,35 +37,82 @@ service.interceptors.response.use(
             return response.data
         }
 
-        if (res.status === 210) {
-            return response.data
-        } else if (res.status === 400) {
-/*             this.$notify.error({
-                title: '错误',
-                message: res.message,
-                duration: 0
-            }); */
-            console.log('ERROR:400')
-
-            return Promise.reject(response.data)
-        } else if (res.status === 200) {
+        if (res.status === 200) {
             Message({
                 message: res.message,
                 type: 'success',
             })
             return response.data
+
+        } else if (res.status === 201) { //创建/修改/删除 成功 返回的状态码
+            Notification.success({
+                title: '成功',
+                message: res.message
+            });
+            return response.data
+
+        } else if (res.status === 206) {
+            return response.data
+
+        } else if (res.status === 404) {
+            Notification.error({
+                title: '错误',
+                message: res.message,
+            })
+            return Promise.reject(error)
+
+        } else if (res.status === 500) {
+            Notification.error({
+                title: '错误',
+                message: res.message,
+                duration: 0
+            })
+            return Promise.reject(error)
+            
+        } else {
+            return response.data
+        } 
+
+
+
+ /*        if (res.status === 210) {
+            return response.data
+        } else if (res.status === 400) {
+            Notification.error({
+                title: '错误',
+                message: res.message,
+                duration: 0
+            });
+            console.log('ERROR:400')
+
+            return Promise.reject(response.data)
+        } else if (res.status === 401) {
+            Notification.error({
+                title: '错误',
+                message: res.message,
+            });
+            router.push("/login");
+            return Promise.reject(error)
+
+        } else if (res.status === 200) {
+            Notification.success({
+                title: '成功',
+                message: res.message
+            });
+            return response.data
         } else {
             return response
-        }
+        } */
 
     }, error => {
         NProgress.done()
         console.log(error)
-/*         this.$notify.error({
+        Notification.error({
             title: '错误',
             message: '登录超时，请联系系统管理员',
             duration: 0
-        }); */
+        });
+        router.push("/login");
         return Promise.reject(error)
     }
 )

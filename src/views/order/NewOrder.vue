@@ -346,7 +346,8 @@
 </template>
 
 <script>
-import { verifyFabricIsEnough, addOrder } from '@/api/neworder'
+import { addOrder } from '@/api/neworder'
+import { verifyFabricIsEnough } from '@/api/clothconsumption'
 import {
   getAnthropometry,
   addAnthropometry,

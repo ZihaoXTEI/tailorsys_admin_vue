@@ -385,7 +385,7 @@ import { getAnthropometry, updateAnthropometry } from '@/api/anthropometry'
 import { paymentMethod, orderStatus } from '@/data/selectdata'
 import { anthropometryEntity } from '@/data/anthropometrydata'
 import { updateOrderStatus } from '@/api/plan'
-import { verifyFabricIsEnough } from '@/api/neworder'
+import { verifyFabricIsEnough } from '@/api/clothconsumption'
 import { fabricNoEnough } from '@/utils/transfor'
 import { isRepeat, setOrderStatusOptionsIsDisplay } from '@/utils/check'
 
