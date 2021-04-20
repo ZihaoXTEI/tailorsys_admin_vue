@@ -101,6 +101,7 @@ export default {
         if (newValue === this.dialogVisible) {
           return
         }
+        this.customerForm = customerEntity
         this.showcustomerDialog(newValue)
       },
       deep: true,
@@ -128,11 +129,11 @@ export default {
     // 监听对话框的关闭事件
     customerDialogClosed() {
       this.dialogVisible = false
-      this.customerForm = customerEntity
       this.$refs.customerFormRef.resetFields()
       this.$emit('update:visible', this.dialogVisible)
     },
 
+    // 监听确认按钮事件
     submit() {
       if (this.id === 0) {
         this.addCustomer()

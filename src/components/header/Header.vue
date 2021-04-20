@@ -142,6 +142,7 @@ export default {
       console.log(command)
       switch (command) {
         case '1':
+          this.goChangePasswordPage()
           break
         case '2':
           this.logout()
@@ -151,6 +152,15 @@ export default {
           break
         default:
           break
+      }
+    },
+
+    goChangePasswordPage() {
+      var routerList = []
+      routerList.push('修改密码')
+      window.sessionStorage.setItem('routerName', routerList)
+      if (this.$route.path !== '/changepassword') {
+        this.$router.push({ path: '/changepassword' })
       }
     },
 

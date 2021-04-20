@@ -34,15 +34,13 @@
           >订单详情</el-button
         >
       </div>
-      <!-- <div v-for="o in 4" :key="o" class="text item">
-        {{ '列表内容 ' + o }}
-      </div> -->
+
       <el-timeline>
         <el-timeline-item
           :color="getColor(order.finish)"
           :timestamp="order.finishDate"
         >
-          {{ order.finish == null ? '未完成' : '已完成 - ' + order.finish }}
+          {{ order.finish == null ? '未完成' : '已成衣 - ' + order.finish }}
         </el-timeline-item>
         <el-timeline-item
           :color="getColor(order.ironing)"
@@ -71,7 +69,7 @@
           <el-tag type="danger" v-if="order.tailoring == null">裁剪</el-tag>
           <el-tag type="warning" v-else-if="order.sewing == null">缝纫</el-tag>
           <el-tag type="info" v-else-if="order.ironing == null">整烫</el-tag>
-          <el-tag type="success" v-else>完成</el-tag>
+          <el-tag type="success" v-else>成衣</el-tag>
         </el-col>
         <el-col :span="5">
           <el-dropdown @command="handleCommand">

@@ -120,28 +120,31 @@ export default {
   methods: {
     getFasStock() {
       // 基于准备好的dom，初始化echarts实例
-      var myChart = echarts.init(document.getElementById('fasstock'),'roma')
-      myChart.showLoading()
+      var fasStockChart = echarts.init(document.getElementById('fasstock'),'roma')
+      //加载开始，显示加载动画
+      fasStockChart.showLoading()
+      //从后端获取数据
       getFasStockGroupByFabricType().then(res => {
+        //对数据格式进行转换
         var datalist = MapListToArray(res.data)
         this.fasstock_option.dataset.source = datalist
         // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(this.fasstock_option)
+        fasStockChart.setOption(this.fasstock_option)
         // 加载完成，隐藏加载动画
-        myChart.hideLoading()
+        fasStockChart.hideLoading()
       })
     },
 
     getQuantity() {
-      var myChart = echarts.init(document.getElementById('quantity'),'roma')
-      myChart.showLoading()
+      var quantityChart = echarts.init(document.getElementById('quantity'),'roma')
+      quantityChart.showLoading()
       getQuantityGroupedByFabricType().then(res => {
         var datalist = MapListToArray(res.data)
         this.quantity_option.dataset.source = datalist
         // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(this.quantity_option)
+        quantityChart.setOption(this.quantity_option)
         // 加载完成，隐藏加载动画
-        myChart.hideLoading()
+        quantityChart.hideLoading()
       })
     }
   }

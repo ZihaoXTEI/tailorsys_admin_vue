@@ -192,7 +192,7 @@ export default {
 
   methods: {
     imageUrl(fabricUrl) {
-      var url = 'http://localhost:8899/image/'
+      var url = 'http://localhost:8899/api/image/'
       if (fabricUrl == null || fabricUrl == '') {
         return url + 'noneImage.jpg'
       }

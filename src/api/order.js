@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-export function getOrderViewList(formData) {
+export function getOrderViewList(queryInfo) {
     return request({
         url: 'order/',
         method: 'get',
-        params: formData
+        params: queryInfo
     })
 }
 

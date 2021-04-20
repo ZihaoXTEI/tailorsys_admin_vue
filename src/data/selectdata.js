@@ -36,4 +36,26 @@ export var sex = [
         value: '女',
         label: '女'
     }
+];
+
+export var consumWidth = [
+    {
+        value: '1.40',
+        label: '1.40米'
+    },
+    {
+        value: '0.90',
+        label: '0.90米'
+    },
+    {
+        value: '0.76',
+        label: '0.76米'
+    }
+];
+
+export var fabrictypeCategory = [
+    "服装面料",
+    "服装里料",
+    "服装絮填物",
+    "服装衬料",
 ]

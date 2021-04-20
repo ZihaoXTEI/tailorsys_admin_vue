@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function getUserList(queryInfo) {
     return request({
         url: 'system/user',
-        menubar: 'get',
-        parmas: queryInfo
+        method: 'get',
+        params: queryInfo
     })
 }
 
@@ -35,5 +35,13 @@ export function updateUser(id, formData) {
         url: `system/user/${id}`,
         method: 'put',
         data: formData
+    })
+}
+
+export function changePassword(username, formData){
+    return request({
+        url:`system/user/changepassword/${username}`,
+        method:'put',
+        params:formData
     })
 }

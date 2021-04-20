@@ -89,6 +89,7 @@ export default {
         if (newValue === this.dialogVisible) {
           return
         }
+        this.supplierForm = supplierEntity
         this.showSupplierDialog(newValue)
       },
       deep: true,
@@ -122,7 +123,6 @@ export default {
     // 监听对话框的关闭事件
     supplierDialogClosed() {
       this.dialogVisible = false
-      this.supplierForm = supplierEntity
       this.$refs.supplierFormRef.resetFields()
       this.$emit('update:visible', this.dialogVisible)
     },

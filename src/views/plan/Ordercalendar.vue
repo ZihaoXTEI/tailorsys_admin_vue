@@ -1,7 +1,7 @@
 <template>
   <div>
+
     <el-calendar>
-      <!--<template slot="dateCell" slot-scope="{ date, data }">-->
       <template #dateCell="{ data }">
         <div class="calendar-day" :class="data.isSelected ? 'is-selected' : ''">
           <div
@@ -16,9 +16,6 @@
             }}
           </div>
 
-          <!--           <template v-for="(item, index) in orderListFilter(data)">
-            <div class="div-order" :key="index + 'o'">{{ item.orderName }}</div>
-          </template> -->
           <template v-for="(item, index) in orderListFilter(data)">
             <el-popover
               ref="popover"
@@ -35,24 +32,7 @@
             </el-popover>
           </template>
 
-          <!--           <span
-            v-for="(item, index) in dataFilter(data)"
-            :key="index"
-            style="display:block;"
-          >
-            {{ item.content }}<br />
-          </span> -->
-
           <template v-for="(item, index) in eventListFilter(data)">
-            <!--             <el-tooltip
-              :content="item.content"
-              placement="bottom"
-              effect="light"
-              :key="index"
-            >
-              <div class="isSelected">{{ item.content }}</div>
-            </el-tooltip> -->
-
             <el-popconfirm
               confirmButtonText="好的"
               cancelButtonText="不用了"
@@ -70,6 +50,7 @@
         </div>
       </template>
     </el-calendar>
+
   </div>
 </template>
 
@@ -77,7 +58,6 @@
 import {
   getEventList,
   addEvent,
-  updateEvent,
   deleteEvent,
   getOrderList
 } from '@/api/plan'
@@ -106,7 +86,6 @@ export default {
       return data => {
         return this.orderList.filter(item => {
           if (item.deadline === data.day) {
-            console.log(item.deadline)
             return item.deadline
           }
         })
@@ -116,17 +95,6 @@ export default {
     eventListFilter() {
       return data => {
         return this.eventList.filter(item => {
-          //let time = this.$moment(Number(ele.start_time * 1000)).format('YYYY-MM-DD')   // 将时间戳转格式
-          //console.log(ele)
-          //return this.$moment(Number(ele.date)).isSame(data.day)
-          /*           if(this.time === data.day){
-            this.counts ++
-            console.log(this.counts)
-          }else{
-            this.counts = 0
-            this.time = data.day
-            console.log(this.counts)
-          } */
           if (item.date === data.day) {
             return item.date
           }
@@ -160,7 +128,7 @@ export default {
       this.$prompt('请输入事件', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /^.{2,8}$/,
+        inputPattern: /^.{3,9}$/,
         inputErrorMessage: '输入字符限制在2-9个'
       })
         .then(({ value }) => {
@@ -198,9 +166,6 @@ export default {
   text-align: center;
   line-height: 16px;
   font-size: 12px;
-
-  /*   padding-top: 2px;
-  border-top: 0px; */
 }
 
 .el-calendar-table .el-calendar-day {

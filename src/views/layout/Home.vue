@@ -14,28 +14,28 @@
 </template>
 
 <script>
-import Aside from "@/components/aside/Aside.vue";
-import Header from "@/components/header/Header.vue";
-import Breadcrumb from "@/components/breadcrumb/Breadcrumb.vue";
+import Aside from '@/components/aside/Aside.vue'
+import Header from '@/components/header/Header.vue'
+import Breadcrumb from '@/components/breadcrumb/Breadcrumb.vue'
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     Header,
     Aside,
-    Breadcrumb,
+    Breadcrumb
   },
   data() {
     return {
       // 默认不折叠
       isCollapse: false,
       // 当前导航地址
-      currentPath: "",
-    };
+      currentPath: ''
+    }
   },
 
-  methods: {},
-};
+  methods: {}
+}
 </script>
 
 <style lang="less" scoped>

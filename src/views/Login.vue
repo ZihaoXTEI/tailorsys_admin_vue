@@ -42,8 +42,8 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginData: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '12345678'
       },
 
       // 登录表单的验证规则
@@ -79,7 +79,6 @@ export default {
         //alert("登录成功！");
         login(_this.loginData).then(response => {
           console.log(response.data)
-          this.$message.success('登录成功')
           //将后端返回的token，保持到客户端的sessionStorage中
           window.sessionStorage.setItem('token', response.data.token)
           //通过编程式导航跳转到后台主页，路由地址是/home

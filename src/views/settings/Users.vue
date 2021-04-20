@@ -28,7 +28,7 @@
       <el-table :data="userList" border stripe>
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column label="用户名" prop="username"></el-table-column>
-        <el-table-column label="密码" prop="password"></el-table-column>
+        <!-- <el-table-column label="密码" prop="password"></el-table-column> -->
         <el-table-column label="邮箱" prop="userEmail"></el-table-column>
         <el-table-column label="手机" prop="userPhone"></el-table-column>
         <el-table-column label="状态">

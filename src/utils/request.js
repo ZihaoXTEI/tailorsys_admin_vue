@@ -11,12 +11,13 @@ import 'nprogress/nprogress.css'
 
 axios.defaults.withCredentials = true
 
-//创建axios实例
+// 创建axios实例
 const service = axios.create({
-    baseURL: 'http://localhost:8899/',
+    baseURL: 'http://127.0.0.1:8899/api/',
     timeout: 3000
 })
 
+// 配置axios请求拦截器
 service.interceptors.request.use(config => {
     NProgress.start()
 
@@ -54,12 +55,12 @@ service.interceptors.response.use(
         } else if (res.status === 206) {
             return response.data
 
-        } else if (res.status === 404) {
-            Notification.error({
+        } else if (res.status === 404 || res.status === 400) {
+            Notification.warning({
                 title: '错误',
                 message: res.message,
             })
-            return Promise.reject(error)
+            return Promise.reject(response.data)
 
         } else if (res.status === 500) {
             Notification.error({
@@ -68,41 +69,41 @@ service.interceptors.response.use(
                 duration: 0
             })
             return Promise.reject(error)
-            
+
         } else {
             return response.data
-        } 
+        }
 
 
 
- /*        if (res.status === 210) {
-            return response.data
-        } else if (res.status === 400) {
-            Notification.error({
-                title: '错误',
-                message: res.message,
-                duration: 0
-            });
-            console.log('ERROR:400')
-
-            return Promise.reject(response.data)
-        } else if (res.status === 401) {
-            Notification.error({
-                title: '错误',
-                message: res.message,
-            });
-            router.push("/login");
-            return Promise.reject(error)
-
-        } else if (res.status === 200) {
-            Notification.success({
-                title: '成功',
-                message: res.message
-            });
-            return response.data
-        } else {
-            return response
-        } */
+        /*        if (res.status === 210) {
+                   return response.data
+               } else if (res.status === 400) {
+                   Notification.error({
+                       title: '错误',
+                       message: res.message,
+                       duration: 0
+                   });
+                   console.log('ERROR:400')
+       
+                   return Promise.reject(response.data)
+               } else if (res.status === 401) {
+                   Notification.error({
+                       title: '错误',
+                       message: res.message,
+                   });
+                   router.push("/login");
+                   return Promise.reject(error)
+       
+               } else if (res.status === 200) {
+                   Notification.success({
+                       title: '成功',
+                       message: res.message
+                   });
+                   return response.data
+               } else {
+                   return response
+               } */
 
     }, error => {
         NProgress.done()

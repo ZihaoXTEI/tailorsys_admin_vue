@@ -29,7 +29,7 @@
             :precision="2"
             :step="1"
             :min="0"
-            :max="1000"
+            :max="10000"
           ></el-input-number>
         </el-form-item>
 
@@ -39,7 +39,7 @@
             :precision="2"
             :step="1"
             :min="0"
-            :max="1000"
+            :max="10000"
           ></el-input-number>
         </el-form-item>
 
@@ -120,7 +120,7 @@
           >
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过5MB
+              只能上传jpg/png文件，且不超过10MB
             </div>
           </el-upload>
         </el-form-item>
@@ -243,15 +243,15 @@ export default {
     },
 
     imageUrl(fabricUrl) {
-      var url = 'http://localhost:8899/image/'
+      var url = 'http://localhost:8899/api/image/'
       if (fabricUrl == null || fabricUrl === '') {
         return url + 'noneImage.jpg'
       }
       return url + fabricUrl
     },
 
-    editFabricStockInfo() {
-      updateFabricStockInfo(this.fasId, this.fabricStockInfo).then(res => {
+    async editFabricStockInfo() {
+      await updateFabricStockInfo(this.fasId, this.fabricStockInfo).then(res => {
         //删除旧图片
         if (this.fabricStockInfo.fabricUrl !== this.oldFabricUrl) {
           removeImage(this.oldFabricUrl)
@@ -261,8 +261,9 @@ export default {
           message: res.message,
           type: 'success'
         })
+        this.goBack()
       })
-      this.goBack()
+      
     },
 
     //获取修改数据
@@ -281,11 +282,11 @@ export default {
 
     //图片上传前，验证图片的大小是否符合要求
     beforeUpload(file) {
-      var isFilesize = file.size / 1024 / 1024 < 5
+      var isFilesize = file.size / 1024 / 1024 < 10
       if (!isFilesize) {
         this.$notify({
           title: '警告',
-          message: '上传的图片大小要小于5MB',
+          message: '上传的图片大小要小于10MB',
           type: 'warning'
         })
       }
