@@ -1,0 +1,22 @@
+export var clothTypeEntity = {
+    clothtypeId: null,
+    clothtypeName: '',
+    shirtLength: false,
+    bust: false,
+    shoulderWidth: false,
+    sleeveLength: false,
+    wristCircum: false,
+    neckCircum: false,
+    pantsLength: false,
+    chestHeight: false,
+    skirtLength: false,
+    waistCircum: false,
+    hipline: false,
+    kneeCircum: false,
+    ankleCircum: false,
+    totalLength: false,
+    fwl: false,
+    backLength: false,
+    hipHeight: false,
+    clothtypeNote: ''
+}
