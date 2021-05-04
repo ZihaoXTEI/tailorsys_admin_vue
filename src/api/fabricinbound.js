@@ -39,3 +39,10 @@ export function updateFabricReceive(id, formData) {
     })
 }
 
+export function deleteFabricReceiveInfo(id) {
+    return request({
+        url: `fabricinbound/fabricrece/${id}`,
+        method: 'delete'
+    })
+}
+

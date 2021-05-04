@@ -81,6 +81,7 @@ export default {
           console.log(response.data)
           //将后端返回的token，保持到客户端的sessionStorage中
           window.sessionStorage.setItem('token', response.data.token)
+          this.$store.commit('SET_USERNAME',response.data.username)
           //通过编程式导航跳转到后台主页，路由地址是/home
           this.$router.push('/home')
         })

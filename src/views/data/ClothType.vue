@@ -2,30 +2,28 @@
   <div>
     <!-- 首行信息 -->
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input
-            placeholder="请输入服装名称"
-            v-model="queryInfo.query"
-            clearable
-            @clear="handleFilter()"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="handleFilter()"
-            ></el-button>
-          </el-input>
-        </el-col>
-
-        <el-col :span="4" :offset="12">
+      <div class="div_top">
+        <el-input
+          placeholder="请输入服装名称"
+          v-model="queryInfo.query"
+          clearable
+          @clear="handleFilter()"
+        >
           <el-button
-            type="primary"
-            @click="showDialog(true, '添加服装类型信息')"
-            >添加服装类型信息</el-button
-          >
-        </el-col>
-      </el-row>
+            slot="append"
+            icon="el-icon-search"
+            @click="handleFilter()"
+          ></el-button>
+        </el-input>
+
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          plain
+          @click="showDialog(true, '添加服装类型信息')"
+          >服装类型信息</el-button
+        >
+      </div>
 
       <!-- 表格模块 -->
       <el-table :data="clothTypeList" border stripe>
@@ -55,22 +53,14 @@
 
         <el-table-column label="操作" fixed="right">
           <template v-slot:default="scope">
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="编辑信息"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                circle
-                @click="
-                  showDialog(true, '修改服装类型信息', scope.row.clothtypeId)
-                "
-              ></el-button>
-            </el-tooltip>
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="
+                showDialog(true, '修改服装类型信息', scope.row.clothtypeId)
+              "
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -161,4 +151,13 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.div_top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.el-input {
+  width: 350px;
+}
+</style>

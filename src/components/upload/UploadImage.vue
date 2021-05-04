@@ -110,7 +110,6 @@ export default {
 
     // 清空上传图片的信息
     clearUploadInfo() {
-      console.log('===')
       console.log(this.imageUrl)
       this.$refs.uploadimage.clearFiles()
       for (let imageurl of this.imageUrl) {

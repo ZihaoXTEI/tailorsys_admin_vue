@@ -2,8 +2,8 @@
   <div>
     <!-- 首行信息 -->
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="8">
+      <div class="div_top">
+        <div>
           <el-input
             placeholder="请输入顾客名称"
             v-model="queryInfo.customername"
@@ -16,9 +16,7 @@
               @click="handleFilter()"
             ></el-button>
           </el-input>
-        </el-col>
 
-        <el-col :span="2">
           <el-tooltip content="按性别筛选" placement="top">
             <el-select
               v-model="queryInfo.customersex"
@@ -36,14 +34,15 @@
               </el-option>
             </el-select>
           </el-tooltip>
-        </el-col>
+        </div>
 
-        <el-col :span="4">
-          <el-button type="primary" @click="showDialog(true, '添加顾客信息')"
-            >添加顾客信息</el-button
-          >
-        </el-col>
-      </el-row>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          @click="showDialog(true, '添加顾客信息')"
+          >顾客信息</el-button
+        >
+      </div>
 
       <!-- 表格模块 -->
       <el-table :data="customerList" border stripe>
@@ -94,7 +93,12 @@
               placement="top"
               :enterable="false"
             >
-              <el-button type="danger" icon="el-icon-delete" circle></el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="deleteCustomerInfo(scope.row.customerId)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -123,7 +127,11 @@
 <script>
 import Pagination from '@/components/pagination/Pagination.vue'
 import CustomerDialog from '@/components/dialog/CustomerDialog.vue'
-import { getCustomerList, updateCustomerStatus } from '@/api/customer'
+import {
+  getCustomerList,
+  updateCustomerStatus,
+  deleteCustomer
+} from '@/api/customer'
 import { sex } from '@/data/selectdata'
 export default {
   name: 'Customer',
@@ -181,9 +189,43 @@ export default {
         .catch(res => {
           switchInfo.status = !switchInfo.status
         })
+    },
+
+    //删除顾客信息按钮事件
+    deleteCustomerInfo(id) {
+      this.$confirm('此操作将永久删除该顾客信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          deleteCustomer(id).then(res => {
+            this.getList()
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.div_top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.el-input {
+  width: 350px;
+  margin-right: 15px;
+}
+
+.el-select {
+  width: 80px;
+}
+</style>

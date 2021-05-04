@@ -1,36 +1,36 @@
 <template>
   <div>
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input
-            placeholder="请输入内容"
-            v-model="queryInfo.query"
-            clearable
-            @clear="handleCurrentChange(1)"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @clear="handleCurrentChange(1)"
-            ></el-button>
-          </el-input>
-        </el-col>
+      <div class="div_top">
+        <el-input
+          placeholder="请输入布料名称"
+          v-model="queryInfo.query"
+          clearable
+          @clear="handleFilter()"
+        >
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="handleFilter()"
+          ></el-button>
+        </el-input>
 
-        <el-col :span="4">
-          <el-button type="primary" @click="showFabricInfoDialog(true,'添加布料信息')"
-            >添加布料信息</el-button
-          >
-        </el-col>
-
-        <el-col :span="4">
+        <div>
           <el-button
             type="primary"
-            @click="showFabricReceiveDialog(true, '添加布料入库记录')"
-            >添加布料入库记录</el-button
+            icon="el-icon-plus"
+            @click="showFabricInfoDialog(true, '添加布料信息')"
+            >布料信息</el-button
           >
-        </el-col>
-      </el-row>
+
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            @click="showFabricReceiveDialog(true, '添加布料入库记录')"
+            >布料入库记录</el-button
+          >
+        </div>
+      </div>
 
       <!-- 表格模块 -->
       <el-table :data="fabricReceiveList" border stripe>
@@ -38,7 +38,7 @@
         <el-table-column label="布料名称" prop="fabricName"></el-table-column>
         <el-table-column label="供应商名称" prop="supName"></el-table-column>
         <el-table-column label="入库长度" prop="farLength"></el-table-column>
-        <el-table-column label="入库重量" prop="farWeight"></el-table-column>
+       <!--  <el-table-column label="入库重量" prop="farWeight"></el-table-column> -->
         <el-table-column label="入库价格" prop="farPrice"></el-table-column>
         <el-table-column label="入库时间" prop="farDate"></el-table-column>
         <el-table-column label="入库人" prop="username"></el-table-column>
@@ -64,28 +64,19 @@
                 "
               ></el-button>
             </el-tooltip>
+
             <el-tooltip
               effect="dark"
               content="删除信息"
               placement="top"
               :enterable="false"
             >
-              <el-popconfirm
-                confirm-button-text="确认"
-                cancel-button-text="取消"
-                icon="el-icon-info"
-                icon-color="red"
-                title="确定删除该行入库信息吗？"
-                @confirm="deleteFabricReceive(scope.row.farId)"
-              >
-                <!-- <el-button slot="reference">删除</el-button> -->
-                <el-button
-                  type="danger"
-                  icon="el-icon-delete"
-                  slot="reference"
-                  circle
-                ></el-button>
-              </el-popconfirm>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="deleteFabricReceive(scope.row.farId)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -123,7 +114,10 @@ import Pagination from '@/components/pagination/Pagination.vue'
 import FabricInfoDialog from '@/components/dialog/FabricInfoDialog.vue'
 import FabricReceiveDialog from '@/components/dialog/FabricReceiveDialog.vue'
 
-import { getFabricReceiveList } from '@/api/fabricinbound'
+import {
+  getFabricReceiveList,
+  deleteFabricReceiveInfo
+} from '@/api/fabricinbound'
 import { changeDateFormat } from '@/utils/moment'
 
 export default {
@@ -185,9 +179,34 @@ export default {
 
     deleteFabricReceive(id) {
       console.log(id)
+      this.$confirm('此操作将永久删除该布料入库信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          deleteFabricReceiveInfo(id).then(res => {
+            this.getList()
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.div_top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.el-input {
+  width: 350px;
+}
+</style>

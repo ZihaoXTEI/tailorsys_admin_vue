@@ -59,7 +59,7 @@
 import { verifyFabricIsEnough } from '@/api/clothconsumption'
 import { getFabricInfoSearch } from '@/api/view'
 import { fabricNoEnough } from '@/utils/transfor'
-import { isRepeat } from '@/utils/check'
+import { isRepeat,fabricStockIsEnough } from '@/utils/check'
 export default {
   name: 'ThirdStep',
   props: {
@@ -152,7 +152,7 @@ export default {
       // 计算所选的布料库存是否充足
       verifyFabricIsEnough(this.anthrId, this.clothtypeId, list).then(res => {
         //筛选出库存不足的布料编号
-        let noEnoughFabricIds = this.dataFilter(res.data)
+        let noEnoughFabricIds = fabricStockIsEnough(res.data)
 
         if (noEnoughFabricIds.length === 0) {
           this.$notify({
@@ -196,7 +196,7 @@ export default {
       })
     },
 
-    // 筛选出库存不足的布料
+    // 筛选出库存不足的布料(作废)
     dataFilter(array) {
       let arr = array.filter(item => {
         if (item.enough === false) {

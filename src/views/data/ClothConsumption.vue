@@ -10,30 +10,28 @@
         :closable="false"
       ></el-alert>
 
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input
-            placeholder="按服装类型名称搜索"
-            v-model="queryInfo.query"
-            clearable
-            @clear="handleFilter()"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="handleFilter()"
-            ></el-button>
-          </el-input>
-        </el-col>
-
-        <el-col :span="4" :offset="12">
+      <div class="div_top">
+        <el-input
+          placeholder="请输入服装类型名称"
+          v-model="queryInfo.query"
+          clearable
+          @clear="handleFilter()"
+        >
           <el-button
-            type="primary"
-            @click="showDialog(true, '添加服装用料信息')"
-            >添加服装用料信息</el-button
-          >
-        </el-col>
-      </el-row>
+            slot="append"
+            icon="el-icon-search"
+            @click="handleFilter()"
+          ></el-button>
+        </el-input>
+
+        <el-button
+          icon="el-icon-plus"
+          type="primary"
+          plain
+          @click="showDialog(true, '添加服装用料信息')"
+          >服装用料信息</el-button
+        >
+      </div>
 
       <!-- 表格模块 -->
       <!--       <el-table :data="clothConsumptionList" border stripe>
@@ -216,4 +214,13 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.div_top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.el-input {
+  width: 350px;
+}
+</style>

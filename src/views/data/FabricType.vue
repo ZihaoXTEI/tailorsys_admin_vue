@@ -2,8 +2,8 @@
   <div>
     <!-- 首行信息 -->
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="8">
+      <div class="div_top">
+        <div>
           <el-input
             placeholder="请输入布料类型名称"
             v-model="queryInfo.fabrictypename"
@@ -16,9 +16,7 @@
               @click="handleFilter()"
             ></el-button>
           </el-input>
-        </el-col>
 
-        <el-col :span="4">
           <el-select
             v-model="queryInfo.fabrictypecategory"
             clearable
@@ -34,14 +32,16 @@
             >
             </el-option>
           </el-select>
-        </el-col>
+        </div>
 
-        <el-col :span="4" :offset="8">
-          <el-button type="primary" @click="showDialog(true, '添加布料类型信息')"
-            >添加布料类型信息</el-button
-          >
-        </el-col>
-      </el-row>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          plain
+          @click="showDialog(true, '添加布料类型信息')"
+          >布料类型信息</el-button
+        >
+      </div>
 
       <!-- 表格模块 -->
       <el-table :data="fabricTypeList" border stripe>
@@ -58,20 +58,15 @@
 
         <el-table-column label="操作">
           <template v-slot:default="scope">
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="编辑信息"
-              placement="top"
-              :enterable="false"
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="
+                showDialog(true, '修改布料类型信息', scope.row.fabrictypeId)
+              "
+              >编辑</el-button
             >
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                circle
-                @click="showDialog(true, '修改布料类型信息', scope.row.fabrictypeId)"
-              ></el-button>
-            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -154,4 +149,14 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.div_top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.el-input {
+  width: 350px;
+  margin-right: 15px;
+}
+</style>

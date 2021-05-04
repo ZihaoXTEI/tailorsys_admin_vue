@@ -53,3 +53,10 @@ export function addOrderFabricDetail(formData) {
         data: formData
     })
 }
+
+export function updateOrderStatus(id, name, datetime, orderstatus) {
+    return request({
+        url: `order/orderstatus/${id}/${name}/${datetime}/${orderstatus}`,
+        method: 'put'
+    })
+}

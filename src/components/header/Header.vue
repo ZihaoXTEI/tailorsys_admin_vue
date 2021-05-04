@@ -134,6 +134,7 @@ export default {
       
       window.sessionStorage.removeItem('token')
       window.sessionStorage.clear()
+      this.$store.commit('REMOVE_USERNAME')
       this.$router.push('/login')
     },
 

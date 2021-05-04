@@ -2,28 +2,27 @@
   <div>
     <!-- 卡片视图区域 -->
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input
-            placeholder="请输入内容"
-            v-model="queryInfo.query"
-            clearable
-            @clear="handleFilter()"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="handleFilter()"
-            ></el-button>
-          </el-input>
-        </el-col>
+      <div class="div_top">
+        <el-input
+          placeholder="请输入用户名称"
+          v-model="queryInfo.query"
+          clearable
+          @clear="handleFilter()"
+        >
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="handleFilter()"
+          ></el-button>
+        </el-input>
 
-        <el-col :span="4">
-          <el-button type="primary" @click="addDialogVisible = true"
-            >添加用户</el-button
-          >
-        </el-col>
-      </el-row>
+        <el-button
+          type="warning"
+          icon="el-icon-plus"
+          @click="addDialogVisible = true"
+          >添加用户</el-button
+        >
+      </div>
 
       <el-table :data="userList" border stripe>
         <el-table-column type="index" label="#"></el-table-column>
@@ -55,7 +54,8 @@
                 icon="el-icon-edit"
                 size="small"
                 @click="showEditDialog(scope.row.userid)"
-              >修改信息</el-button>
+                >编辑</el-button
+              >
             </el-tooltip>
           </template>
         </el-table-column>
@@ -93,10 +93,7 @@
           <el-input type="password" v-model="addUserForm.password"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPassword">
-          <el-input
-            type="password"
-            v-model="checkPassword"
-          ></el-input>
+          <el-input type="password" v-model="checkPassword"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="useremail">
           <el-input v-model="addUserForm.useremail"></el-input>
@@ -138,7 +135,9 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUser(editUserForm.userid)">确 定</el-button>
+        <el-button type="primary" @click="editUser(editUserForm.userid)"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -153,8 +152,8 @@ import {
   getUser,
   updateUser
 } from '@/api/user'
-import {changeTimeFormat} from '@/utils/moment'
-import {userEntity} from '@/data/userdata';
+import { changeTimeFormat } from '@/utils/moment'
+import { userEntity } from '@/data/userdata'
 
 export default {
   name: 'Users',
@@ -182,8 +181,7 @@ export default {
     }
 
     return {
-
-      checkPassword:'',
+      checkPassword: '',
 
       // 获取用户列表的测试对象
       queryInfo: {
@@ -201,8 +199,7 @@ export default {
       editDialogVisible: false,
 
       // 添加用户的表单数据
-      addUserForm: {
-      },
+      addUserForm: {},
 
       // 添加用户的表单的验证规则对象
       addUserFormRules: {
@@ -250,14 +247,13 @@ export default {
   },
 
   methods: {
-
     // 获取用户列表方法
     getList() {
       getUserList(this.queryInfo).then(res => {
         this.userList = res.data.content
-        changeTimeFormat(this.userList,'registime')
+        changeTimeFormat(this.userList, 'registime')
         this.total = res.data.totalSize
-        console.log( this.userList)
+        console.log(this.userList)
       })
     },
 
@@ -327,4 +323,13 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.div_top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.el-input {
+  width: 350px;
+}
+</style>

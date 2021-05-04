@@ -37,3 +37,10 @@ export function updateSupplierStatus(id,status){
         method: 'put',
     })
 }
+
+export function deleteSupplier(id){
+    return request({
+        url: `supplier/${id}`,
+        method: 'delete',
+    })
+}

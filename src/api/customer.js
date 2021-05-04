@@ -37,3 +37,10 @@ export function updateCustomerStatus(id,status){
         method: 'put',
     })
 }
+
+export function deleteCustomer(id){
+    return request({
+        url: `customer/${id}`,
+        method: 'delete',
+    })
+}

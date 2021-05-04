@@ -13,7 +13,7 @@ const routerpath = {
             //console.log(state.routerName)
         },
 
-        REMOVER_ROUTERNAME: (state, index) => {
+        REMOVE_ROUTERNAME: (state, index) => {
             state.routerName.splice(index, 1)
         }
 
@@ -25,7 +25,7 @@ const routerpath = {
         },
 
         removeRouterName({ commit }, index) {
-            commit('REMOVER_ROUTERNAME', index)
+            commit('REMOVE_ROUTERNAME', index)
         }
 
     }

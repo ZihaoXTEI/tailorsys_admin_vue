@@ -184,7 +184,6 @@ export default {
     getSelectFabricType() {
       getFabricTypeSelect().then(res => {
         this.selectFabricType = res.data
-        this.$refs.uploadimage.clearUploadInfo()
         this.$emit('update:visible', this.dialogVisible)
       })
     }

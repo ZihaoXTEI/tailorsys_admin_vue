@@ -128,6 +128,7 @@ export default {
     showfabricTypeDialog() {
       if (this.id === 0) {
         this.dialogVisible = true
+        this.fabricTypeForm = fabricTypeEntity
         return
       }
       getFabricType(this.id).then(res => {

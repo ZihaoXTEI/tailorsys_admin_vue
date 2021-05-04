@@ -372,7 +372,8 @@ import {
   updateOrder,
   updateOrderFabricDetail,
   deleteOrderFabricDetail,
-  addOrderFabricDetail
+  addOrderFabricDetail,
+  updateOrderStatus
 } from '@/api/order'
 import {
   getCustomerSelect,
@@ -384,11 +385,13 @@ import {
 import { getAnthropometry, updateAnthropometry } from '@/api/anthropometry'
 import { paymentMethod, orderStatus } from '@/data/selectdata'
 import { anthropometryEntity } from '@/data/anthropometrydata'
-import { updateOrderStatus } from '@/api/plan'
 import { verifyFabricIsEnough } from '@/api/clothconsumption'
 import { fabricNoEnough } from '@/utils/transfor'
-import { isRepeat, setOrderStatusOptionsIsDisplay } from '@/utils/check'
-
+import {
+  isRepeat,
+  setOrderStatusOptionsIsDisplay,
+  fabricStockIsEnough
+} from '@/utils/check'
 export default {
   name: 'OrderDetail',
   data() {
@@ -480,14 +483,12 @@ export default {
           this.self_orderstatus,
           this.selectOrderStatus
         )
-        console.log(this.orderForm)
       })
     },
 
     getOrderDetail() {
       getOrderDetailAndFabric(this.self_orderid).then(res => {
         this.orderDetailForm = res.data
-        console.log(this.orderDetailForm)
       })
     },
 
@@ -510,7 +511,7 @@ export default {
     },
 
     imageUrl(fabricUrl) {
-      var url = 'http://localhost:8899/image/'
+      var url = 'http://localhost:8899/api/image/'
       if (fabricUrl == null || fabricUrl === '') {
         return url + 'noneImage.jpg'
       }
@@ -522,7 +523,6 @@ export default {
       var routerName = window.sessionStorage.getItem('routerName')
       routerName = routerName.split(',')
       var previous = routerName[routerName.length - 2]
-      console.log(previous)
       for (let i = 0; i < routerName.length - 1; i++) {
         routerList.push(routerName[i])
       }
@@ -601,14 +601,56 @@ export default {
         this.orderForm.anthrId,
         this.orderForm.clothtypeId,
         list
-      )
-        .then(res => {
+      ).then(res => {
+        let isEnough = fabricStockIsEnough(res.data)
+
+        if (isEnough.length === 0) {
+          this.$notify({
+            title: '成功',
+            message: '所选择的布料库存充足',
+            type: 'success'
+          })
+
           //存储返回的布料需求量
-          this.orderFabricDetail.ofdPrede = parseFloat(res.data[0])
-          this.$message.success('布料库存验证成功')
+          this.orderFabricDetail.ofdPrede = parseFloat(res.data[0].consumption)
           this.isAddOrderDetail = false
-        })
-        .catch(res => {
+        } else {
+          var msg = noEnoughFabricIds
+          msg = fabricNoEnough(msg)
+
+          this.$confirm(msg, '提示', {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning',
+            dangerouslyUseHTMLString: true,
+            center: true
+          })
+            .then(() => {
+              this.$message({
+                type: 'warning',
+                message: '继续添加'
+              })
+
+              this.orderFabricDetail.ofdPrede = parseFloat(
+                res.data[0].consumption
+              )
+              this.isAddOrderDetail = false
+            })
+            .catch(() => {
+              this.orderFabricDetail.ofdPrede = 0
+              this.orderFabricDetail.fabricId = undefined
+              return this.$message({
+                type: 'info',
+                message: '请重新选择布料信息'
+              })
+            })
+        }
+
+        //存储返回的布料需求量
+        //this.orderFabricDetail.ofdPrede = parseFloat(res.data[0])
+        //this.$message.success('布料库存验证成功')
+      })
+      /*         .catch(res => {
           this.orderFabricDetail.ofdPrede = parseFloat(res.data[0])
 
           var msg = res.data.slice(1)
@@ -635,14 +677,14 @@ export default {
                 message: '请重新选择布料信息'
               })
             })
-        })
+        }) */
     },
 
     addOrderDetailForm() {
       this.orderFabricDetail.orderId = this.self_orderid
-      console.log(this.orderFabricDetail)
       addOrderFabricDetail(this.orderFabricDetail)
         .then(res => {
+          //console.log(this.orderFabricDetail)
           this.isAddOrderDetail = true
           this.orderFabricDetail.ofdNo = undefined
           this.orderFabricDetail.orderId = this.self_orderid
@@ -689,19 +731,20 @@ export default {
         return
       }
 
-      console.log('HAHA')
+      console.log(this.orderStatusForm)
 
-      /*       updateOrderStatus(
+      updateOrderStatus(
         this.self_orderid,
         this.orderStatusForm.username,
-        this.orderStatusForm.datetime
+        this.orderStatusForm.datetime,
+        this.self_orderstatus
       )
         .then(res => {
           this.getOrder()
         })
         .catch(err => {
           this.getOrder()
-        }) */
+        })
     },
 
     anthropometryDialogOpen() {

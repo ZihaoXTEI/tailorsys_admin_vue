@@ -112,20 +112,11 @@
 
         <el-table-column label="操作">
           <template v-slot:default="scope">
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="编辑信息"
-              placement="top"
-              :enterable="false"
-            >
               <el-button
                 type="primary"
                 icon="el-icon-edit"
-                circle
                 @click="updateFabricStockPage(scope.row.fasId)"
-              ></el-button>
-            </el-tooltip>
+              >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>

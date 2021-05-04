@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <el-calendar>
       <template #dateCell="{ data }">
         <div class="calendar-day" :class="data.isSelected ? 'is-selected' : ''">
@@ -26,6 +25,12 @@
               :content="'订单编号：' + item.orderId"
               :key="index + 'o'"
             >
+              <p>订单编号：{{item.orderId}}</p>
+              <p>订单总价：{{item.totalAmount}}</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="goOrderDetailPage(item.orderId)">订单详情</el-button>
+              </div>
+
               <template #reference>
                 <div class="div-order">{{ item.orderName }}</div>
               </template>
@@ -50,17 +55,11 @@
         </div>
       </template>
     </el-calendar>
-
   </div>
 </template>
 
 <script>
-import {
-  getEventList,
-  addEvent,
-  deleteEvent,
-  getOrderList
-} from '@/api/plan'
+import { getEventList, addEvent, deleteEvent, getOrderList } from '@/api/plan'
 import { changeDateFormat } from '@/utils/moment'
 export default {
   data() {
@@ -156,6 +155,17 @@ export default {
           this.getList()
         })
         .catch(err => {})
+    },
+
+    goOrderDetailPage(id) {
+      console.log(id)
+      var routerList = []
+      routerList.push('订单管理')
+      routerList.push('订单管理')
+      routerList.push('订单详情')
+      window.sessionStorage.setItem('routerName', routerList)
+      this.$router.push({ path: '/order/orderdetail', query: { orderId: id } })
+
     }
   }
 }

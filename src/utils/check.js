@@ -32,3 +32,18 @@ export function setOrderStatusOptionsIsDisplay(orderstatus, orderStatusList) {
         }
     }
 }
+
+// 筛选出库存不足的布料
+export function fabricStockIsEnough(array) {
+  let arr = array.filter(item => {
+    if (item.enough === false) {
+      return item
+    }
+  })
+
+  let data = []
+  for (let obj of arr) {
+    data.push(obj.fabricId)
+  }
+  return data
+}

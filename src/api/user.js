@@ -40,7 +40,7 @@ export function updateUser(id, formData) {
 
 export function changePassword(username, formData){
     return request({
-        url:`system/user/changepassword/${username}`,
+        url:`system/changepassword/${username}`,
         method:'put',
         params:formData
     })

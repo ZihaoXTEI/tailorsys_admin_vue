@@ -13,7 +13,7 @@ axios.defaults.withCredentials = true
 
 // 创建axios实例
 const service = axios.create({
-    baseURL: 'http://127.0.0.1:8899/api/',
+    baseURL: 'http://localhost:8899/api/',
     timeout: 3000
 })
 
@@ -113,6 +113,9 @@ service.interceptors.response.use(
             message: '登录超时，请联系系统管理员',
             duration: 0
         });
+        window.sessionStorage.removeItem('token')
+        window.sessionStorage.removeItem('routerName')
+        window.sessionStorage.removeItem('currentPath')
         router.push("/login");
         return Promise.reject(error)
     }
