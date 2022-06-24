@@ -392,6 +392,7 @@ import {
   setOrderStatusOptionsIsDisplay,
   fabricStockIsEnough
 } from '@/utils/check'
+import { ImageURL } from '@/api/uploadfile'
 export default {
   name: 'OrderDetail',
   data() {
@@ -511,7 +512,8 @@ export default {
     },
 
     imageUrl(fabricUrl) {
-      var url = 'http://localhost:8899/api/image/'
+      var url = ImageURL
+      //var url = '/api/image/'
       if (fabricUrl == null || fabricUrl === '') {
         return url + 'noneImage.jpg'
       }

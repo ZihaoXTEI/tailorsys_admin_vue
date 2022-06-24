@@ -119,8 +119,8 @@ export default {
     // Tab按钮事件处理函数
     tabClicked() {
       if (this.activeIndex === '1') {
-        this.$refs.secondStep.getAnthrData(this.newOrderForm.customerId)
-        this.$refs.secondStep.getAnthropometrySelect(this.newOrderForm.clothtypeId)
+        this.$refs.secondStep.getAnthrData(this.newOrderForm.clothtypeId)
+        this.$refs.secondStep.getAnthropometrySelect(this.newOrderForm.customerId)
       }
     },
 

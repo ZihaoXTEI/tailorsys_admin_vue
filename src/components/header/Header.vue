@@ -2,7 +2,7 @@
   <el-header>
     <div>
       <img src="@/assets/trademark.png" />
-      <el-badge value="v1.0.0" type="primary">
+      <el-badge value="v1.0.5" type="primary">
         <div style="width:200px;">
           <span>制衣店管理系统 </span>
         </div>
@@ -10,7 +10,7 @@
     </div>
     <div>
       <!--隐藏按钮背景和边框：style="background-color: unset;border: none;"-->
-      <el-badge :value="infoNum" :max="99" class="item" :hidden="isShowBadge">
+      <el-badge :value="infoNum"  is-dot :max="99" class="item" :hidden="isShowBadge">
         <el-button
           icon="el-icon-message-solid"
           size="small"

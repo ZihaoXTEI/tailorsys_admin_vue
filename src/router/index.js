@@ -76,6 +76,8 @@ VueRouter.prototype.push = function push(location) {
 router.beforeEach((to, from, next) => {
   console.log(from)
 
+  // 对于访问除登录页面外的页面需要判断sessionStorage中的token值是否为空，以此来判断用户是否成功判断
+  // 如果用户成功登录，后端会传送一个token值到前端，前端需要存储此token值，以后的每一次请求都需要附带给token值
   if (to.path !== '/' && to.path !== '/login' && window.sessionStorage.getItem('token') == null) {
     router.replace('/login')
     next()

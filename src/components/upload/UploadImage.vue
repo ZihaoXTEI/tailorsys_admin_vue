@@ -112,9 +112,9 @@ export default {
     clearUploadInfo() {
       console.log(this.imageUrl)
       this.$refs.uploadimage.clearFiles()
-      for (let imageurl of this.imageUrl) {
+/*       for (let imageurl of this.imageUrl) {
         removeImage(imageurl)
-      }
+      } */
 /*       this.imageUrl = []
       this.$emit('update:imageurl', this.imageUrl) */
     }

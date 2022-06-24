@@ -14,6 +14,7 @@ axios.defaults.withCredentials = true
 // 创建axios实例
 const service = axios.create({
     baseURL: 'http://localhost:8899/api/',
+    //baseURL: '/api/',
     timeout: 3000
 })
 
@@ -21,6 +22,7 @@ const service = axios.create({
 service.interceptors.request.use(config => {
     NProgress.start()
 
+    // 将token值放到请求的header下的Authorization中（HTTP相关内容）
     config.headers.Authorization = window.sessionStorage.getItem('token')
     return config
 }, error => {
@@ -45,7 +47,7 @@ service.interceptors.response.use(
             })
             return response.data
 
-        } else if (res.status === 201) { //创建/修改/删除 成功 返回的状态码
+        } else if (res.status === 201) { // 创建/修改/删除 成功 返回的状态码
             Notification.success({
                 title: '成功',
                 message: res.message
@@ -65,8 +67,8 @@ service.interceptors.response.use(
         } else if (res.status === 500) {
             Notification.error({
                 title: '错误',
-                message: res.message,
-                duration: 0
+                message: res.message
+                //duration: 0
             })
             return Promise.reject(error)
 
@@ -74,44 +76,13 @@ service.interceptors.response.use(
             return response.data
         }
 
-
-
-        /*        if (res.status === 210) {
-                   return response.data
-               } else if (res.status === 400) {
-                   Notification.error({
-                       title: '错误',
-                       message: res.message,
-                       duration: 0
-                   });
-                   console.log('ERROR:400')
-       
-                   return Promise.reject(response.data)
-               } else if (res.status === 401) {
-                   Notification.error({
-                       title: '错误',
-                       message: res.message,
-                   });
-                   router.push("/login");
-                   return Promise.reject(error)
-       
-               } else if (res.status === 200) {
-                   Notification.success({
-                       title: '成功',
-                       message: res.message
-                   });
-                   return response.data
-               } else {
-                   return response
-               } */
-
     }, error => {
         NProgress.done()
         console.log(error)
         Notification.error({
             title: '错误',
-            message: '登录超时，请联系系统管理员',
-            duration: 0
+            message: '登录超时，请联系系统管理员'
+            //duration: 0
         });
         window.sessionStorage.removeItem('token')
         window.sessionStorage.removeItem('routerName')

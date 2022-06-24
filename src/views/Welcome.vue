@@ -83,12 +83,10 @@
       </el-carousel>
     </el-card>
 
-    <el-card style="width:400px">
+    <el-card >
       <div id="sexratio" style="width: 100%;height:400px;"></div>
     </el-card>
 
-    <el-card style='width: auto'>
-    </el-card>
 
   </div>
 </template>

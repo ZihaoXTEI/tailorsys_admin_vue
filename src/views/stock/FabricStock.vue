@@ -137,6 +137,7 @@
 import Pagination from '@/components/pagination/Pagination.vue'
 import { getFabricStockInfoList } from '@/api/fabricstock'
 import { getFabricTypeSelect } from '@/api/view'
+import { ImageURL } from '@/api/uploadfile'
 
 export default {
   name: 'FabricStock',
@@ -183,7 +184,8 @@ export default {
 
   methods: {
     imageUrl(fabricUrl) {
-      var url = 'http://localhost:8899/api/image/'
+      var url = ImageURL
+      //var url = '/api/image/'
       if (fabricUrl == null || fabricUrl == '') {
         return url + 'noneImage.jpg'
       }

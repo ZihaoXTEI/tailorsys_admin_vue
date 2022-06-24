@@ -134,9 +134,8 @@ export default {
 
   methods: {
     showFabricInfoDialog() {
-      
-      console.log(this.imageUrl)
       this.imageUrl = []
+
       if (this.id === 0) {
         this.dialogVisible = true
         return
@@ -157,6 +156,11 @@ export default {
 
     // 监听确认按钮事件
     submit() {
+      if (this.imageUrl.length < 1) {
+        this.imageUrl.push('noneImage.jpg')
+      }
+      this.fabricInfoForm.fabricUrl = this.imageUrl[0]
+      
       if (this.id === 0) {
         this.addFabricInfo()
       } else {

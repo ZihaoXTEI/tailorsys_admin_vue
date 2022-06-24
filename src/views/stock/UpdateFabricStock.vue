@@ -61,15 +61,6 @@
         </el-form-item>
 
         <el-form-item label="布料类型" prop="fabricType">
-          <!--           <el-select v-model="fabricStockInfo.fabricType" placeholder="请选择">
-            <el-option
-              v-for="item in selectFabricType"
-              :key="item.fabrictype_id"
-              :label="item.fabrictype_name"
-              :value="item.fabrictype_id"
-            >
-            </el-option>
-          </el-select> -->
           <el-select v-model="fabricStockInfo.fabricType" placeholder="请选择">
             <el-option
               v-for="item in selectFabricType"
@@ -101,28 +92,16 @@
           <el-image
             style="width: 100px; height: 100px"
             fit="contain"
-            :src="imageUrl(fabricStockInfo.fabricUrl)"
-            :preview-src-list="[imageUrl(fabricStockInfo.fabricUrl)]"
+            :src="setImageUrl(fabricStockInfo.fabricUrl)"
+            :preview-src-list="[setImageUrl(fabricStockInfo.fabricUrl)]"
           >
             <i class="el-icon-picture-outline"></i>
           </el-image>
-          <el-upload
-            list-type="picture"
-            :limit="1"
-            :action="uploadImage"
-            :headers="headers"
-            accept=".jpg, .jpeg, .png, .JPG, .JPEG"
-            :file-list="imageList"
-            :before-upload="beforeUpload"
-            :on-success="uploadImageSuccess"
-            :on-error="uploadImageError"
-            :on-remove="removeImage"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过10MB
-            </div>
-          </el-upload>
+          <UploadImage
+            ref="uploadimage"
+            :imageUrl.sync="imageUrl"
+            :limit="limit"
+          ></UploadImage>
         </el-form-item>
       </el-form>
       <el-divider></el-divider>
@@ -135,11 +114,14 @@
 </template>
 
 <script>
+import UploadImage from '@/components/upload/UploadImage.vue'
 import { getFabricStockInfo, updateFabricStockInfo } from '@/api/fabricstock'
 import { getFabricTypeSelect } from '@/api/view'
-import { removeImage } from '@/api/uploadfile'
+import { ImageURL,removeImage } from '@/api/uploadfile'
 
 export default {
+  name: 'UpdateFabricStock',
+  components: { UploadImage },
   data() {
     return {
       fasId: undefined,
@@ -159,7 +141,10 @@ export default {
 
       oldFabricUrl: null,
 
-      imageList: [],
+      imageUrl: [],
+      limit: 1,
+
+      IMAGEURL:'',
 
       // 布料类型选择器数据内容
       selectFabricType: [],
@@ -213,18 +198,7 @@ export default {
     this.fasId = this.$route.query.fasId
     this.getSelectFabricType()
     this.getFabricStockInfo()
-    this.oldFabricUrl = this.getFabricStockInfo.fabricUrl
-  },
-
-  computed: {
-    uploadImage() {
-      return 'http://localhost:8899/file/uploadimage'
-    },
-    headers() {
-      return {
-        Authorization: window.sessionStorage.getItem('token')
-      }
-    }
+    this.IMAGEURL = ImageURL
   },
 
   methods: {
@@ -237,39 +211,45 @@ export default {
       }
       window.sessionStorage.setItem('routerName', routerList)
 
-      this.$store.dispatch('removeRouterName',2)
+      this.$store.dispatch('removeRouterName', 2)
 
       this.$router.push('/fabricstock')
     },
 
-    imageUrl(fabricUrl) {
-      var url = 'http://localhost:8899/api/image/'
+    setImageUrl(fabricUrl) {
       if (fabricUrl == null || fabricUrl === '') {
-        return url + 'noneImage.jpg'
+        return this.IMAGEURL + 'noneImage.jpg'
       }
-      return url + fabricUrl
+      return this.IMAGEURL + fabricUrl
     },
 
     async editFabricStockInfo() {
-      await updateFabricStockInfo(this.fasId, this.fabricStockInfo).then(res => {
-        //删除旧图片
-        if (this.fabricStockInfo.fabricUrl !== this.oldFabricUrl) {
-          removeImage(this.oldFabricUrl)
+      if (this.imageUrl.length != 0) {
+        this.fabricStockInfo.fabricUrl = this.imageUrl[0]
+      }
+
+      await updateFabricStockInfo(this.fasId, this.fabricStockInfo).then(
+        res => {
+          //删除旧图片
+          if (this.fabricStockInfo.fabricUrl !== this.oldFabricUrl) {
+            removeImage(this.oldFabricUrl)
+          }
+          this.$notify({
+            title: '成功',
+            message: res.message,
+            type: 'success'
+          })
+          this.goBack()
         }
-        this.$notify({
-          title: '成功',
-          message: res.message,
-          type: 'success'
-        })
-        this.goBack()
-      })
-      
+      )
     },
 
     //获取修改数据
     getFabricStockInfo() {
+      this.imageUrl = []
       getFabricStockInfo(this.fasId).then(res => {
         this.fabricStockInfo = res.data
+        this.oldFabricUrl = res.data.fabricUrl
       })
     },
 
@@ -278,54 +258,6 @@ export default {
       getFabricTypeSelect().then(res => {
         this.selectFabricType = res.data
       })
-    },
-
-    //图片上传前，验证图片的大小是否符合要求
-    beforeUpload(file) {
-      var isFilesize = file.size / 1024 / 1024 < 10
-      if (!isFilesize) {
-        this.$notify({
-          title: '警告',
-          message: '上传的图片大小要小于10MB',
-          type: 'warning'
-        })
-      }
-      return isFilesize
-    },
-
-    //图片上传成功后的方法
-    uploadImageSuccess(response, file, fileList) {
-      if (response.status == 200) {
-        this.$notify({
-          title: '成功',
-          message: response.message,
-          type: 'success'
-        })
-        this.fabricStockInfo.fabricUrl = response.data
-      } else {
-        this.$notify.error({
-          title: '错误',
-          message: response.message
-        })
-      }
-    },
-
-    //图片上传失败后的方法
-    uploadImageError(err, file, fileList) {
-      this.$notify.error({
-        title: '上传图片失败',
-        message: response.message
-      })
-    },
-    //移除图片方法
-    removeImage(file) {
-      removeImage(file.response.data)
-        .then(res => {
-          this.fabricStockInfo.fabricUrl = this.oldFabricUrl
-        })
-        .catch(e => {
-          console.log('删除错误')
-        })
     }
   }
 }

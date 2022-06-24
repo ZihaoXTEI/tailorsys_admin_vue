@@ -34,53 +34,6 @@
       </div>
 
       <!-- 表格模块 -->
-      <!--       <el-table :data="clothConsumptionList" border stripe>
-        <el-table-column
-          label="服装类型名称"
-          prop="clothtypeName"
-          fixed="left"
-        ></el-table-column>
-        <template v-for="(item, index) in clothConsumptionCloumnList.slice(2)">
-          <el-table-column
-            :label="item.column_comment"
-            :prop="item.column_name"
-            :key="index"
-          >
-            <template slot-scope="scope">
-              <span
-                style="font-weight:bold;"
-                v-if="scope.row[item.column_name] !== 0"
-              >
-                {{ scope.row[item.column_name] }}</span
-              >
-              <span v-else>
-                {{ scope.row[item.column_name] }}
-              </span>
-            </template>
-          </el-table-column>
-        </template>
-
-        <el-table-column label="操作" fixed="right">
-          <template v-slot:default="scope">
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="编辑用料信息"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                circle
-                @click="showEditClothConsumptionDialog(scope.row.consumId)"
-              ></el-button>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table> -->
-
-      <!-- 表格模块 -->
       <el-table :data="dataList" border>
         <el-table-column label="#" type="index"></el-table-column>
         <el-table-column
