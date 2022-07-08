@@ -12,7 +12,7 @@
 
 **数据可视化**：Echart  *5.0.2*
 
-**CSS预编译**：Less * 4.1.1*
+**CSS预编译**：Less *4.1.1*
 
 **HTTP工具**：Axios  *0.21.1*
 
@@ -249,3 +249,5 @@ npm install
 ```shell
 npm run serve
 ```
+
+> 本项目为本人的本科毕业设计内容
